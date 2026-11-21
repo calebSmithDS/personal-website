@@ -1,0 +1,254 @@
+---
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<div
+  class="card-wrapper"
+  data-title={project.title.toLowerCase()}
+  data-description={project.description.toLowerCase()}
+  data-tags={project.tags.map((t) => t.toLowerCase()).join(',')}
+>
+  <div
+    class="card-container"
+    tabindex="0"
+    role="button"
+    aria-pressed="false"
+    aria-label={`Flip card for ${project.title}`}
+  >
+    <div class="card-inner">
+      <!-- Front Face -->
+      <div class="card-face card-front">
+        <div class="card-top-bar">
+          <span class="corner-arrow" aria-hidden="true">↳</span>
+        </div>
+
+        <div class="front-center">
+          <h3 class="card-title">{project.title}</h3>
+          <span class="flip-hint">Click to view details</span>
+        </div>
+      </div>
+
+      <!-- Back Face -->
+      <div class="card-face card-back">
+        <div class="back-header">
+          <h4>{project.title}</h4>
+          <span class="flip-hint-back">↺</span>
+        </div>
+
+        <p class="card-description">{project.description}</p>
+
+        <div class="card-footer">
+          <div class="tag-list">
+            {project.tags.map((tag) => <span class="tag">#{tag}</span>)}
+          </div>
+          <a
+            href={project.repoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="repo-link"
+          >
+            Repo →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const cards = document.querySelectorAll<HTMLElement>('.card-container');
+
+  cards.forEach((card) => {
+    const toggleFlip = (event: Event) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest('a')) return;
+
+      const isFlipped = card.classList.toggle('is-flipped');
+      card.setAttribute('aria-pressed', String(isFlipped));
+    };
+
+    card.addEventListener('click', toggleFlip);
+  });
+</script>
+
+<style>
+  .card-wrapper.is-hidden {
+    display: none;
+  }
+
+  .card-container {
+    perspective: 1000px;
+    height: 230px;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .card-container:focus-visible .card-face {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-dim);
+  }
+
+  .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .card-container.is-flipped .card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+    padding: 1.25rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card-front {
+    transform: rotateY(0deg);
+    background-color: var(--bg-card);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .card-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  .corner-arrow {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    opacity: 0.4;
+    transition: opacity 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  }
+
+  .front-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex: 1;
+    gap: 0.5rem;
+  }
+
+  .card-container:hover .card-front {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-card);
+  }
+
+  .card-container:hover .corner-arrow {
+    opacity: 0.9;
+    color: var(--accent);
+  }
+
+  .card-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+  }
+
+  .flip-hint {
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    opacity: 0.65;
+    transition: opacity 0.2s ease, color 0.2s ease;
+  }
+
+  .card-container:hover .flip-hint {
+    opacity: 1;
+    color: var(--accent);
+  }
+
+  .card-back {
+    transform: rotateY(180deg);
+    background-color: var(--bg-card-back);
+    border-color: var(--accent);
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .back-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .back-header h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .flip-hint-back {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .card-description {
+    font-size: 0.88rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+    opacity: 0.92;
+    margin: 0.5rem 0;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-top: 0.65rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+  }
+
+  .repo-link {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--accent);
+  }
+
+  .repo-link:hover {
+    text-decoration: underline;
+  }
+</style>

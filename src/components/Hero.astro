@@ -1,0 +1,411 @@
+---
+interface Props {
+  name?: string;
+  tagline?: string;
+  location?: string;
+  bio?: string;
+  tags?: string[];
+  imageSrc?: string;
+  imageAlt?: string;
+  githubUrl?: string;
+  linkedinUrl?: string;
+  email?: string;
+}
+
+const {
+  name = 'Caleb Smith',
+  tagline = 'Software Developer',
+  location = 'Adelaide, AU',
+  bio = 'Software developer based in Adelaide, building practical web applications, backend microservices, and automation tools.',
+  tags = ['#typescript', '#node-fastify', '#python', '#microservices'],
+  imageSrc = '/profile.jpg',
+  imageAlt = 'Portrait of Caleb Smith',
+  githubUrl = 'https://github.com/calebSmithDS',
+  linkedinUrl = 'https://www.linkedin.com/in/caleb-smith-778a6123b/',
+  email = 'caleb@calebsmith.com.au',
+} = Astro.props;
+---
+
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-content">
+      <h1 class="hero-name">{name}</h1>
+      <p class="hero-role">{tagline}</p>
+      
+      {location && (
+        <div class="hero-location">
+          <svg class="location-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <span>{location}</span>
+        </div>
+      )}
+
+      <p class="hero-bio">{bio}</p>
+
+      {tags && tags.length > 0 && (
+        <div class="tag-list" aria-label="Specialties">
+          {tags.map((tag) => (
+            <span class="tag-pill">{tag}</span>
+          ))}
+        </div>
+      )}
+
+      <div class="contact-links">
+        {githubUrl && (
+          <a
+            href={githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="contact-link"
+            aria-label="GitHub profile"
+          >
+            <svg class="contact-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+            </svg>
+            <span>GitHub</span>
+          </a>
+        )}
+
+        {linkedinUrl && (
+          <a
+            href={linkedinUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="contact-link"
+            aria-label="LinkedIn profile"
+          >
+            <svg class="contact-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+              <rect x="2" y="9" width="4" height="12"></rect>
+              <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+            <span>LinkedIn</span>
+          </a>
+        )}
+
+        {email && (
+          <div class="email-wrapper">
+            <a
+              href={`mailto:${email}`}
+              class="contact-link email-link"
+              aria-label={`Send email to ${email}`}
+            >
+              <svg class="contact-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+              </svg>
+              <span>{email}</span>
+            </a>
+            <button
+              type="button"
+              class="copy-btn"
+              id="copy-email-btn"
+              data-email={email}
+              aria-label="Copy email address"
+              title="Copy email address"
+            >
+              <svg class="copy-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+              </svg>
+              <span class="copy-tooltip" id="copy-tooltip">Copied!</span>
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+
+    <div class="hero-media">
+      <div class="photo-frame">
+        <img
+          src={imageSrc}
+          alt={imageAlt}
+          width="280"
+          height="280"
+          loading="eager"
+          onerror="this.parentElement.classList.add('is-fallback')"
+        />
+        <div class="photo-placeholder" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const copyBtn = document.getElementById('copy-email-btn');
+  const tooltip = document.getElementById('copy-tooltip');
+
+  if (copyBtn && tooltip) {
+    copyBtn.addEventListener('click', async () => {
+      const email = copyBtn.getAttribute('data-email');
+      if (email) {
+        try {
+          await navigator.clipboard.writeText(email);
+          tooltip.classList.add('visible');
+          setTimeout(() => {
+            tooltip.classList.remove('visible');
+          }, 2000);
+        } catch (err) {
+          console.error('Failed to copy email:', err);
+        }
+      }
+    });
+  }
+</script>
+
+<style>
+  .hero {
+    padding: 3.5rem 0 3rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .hero-content {
+    min-width: 0;
+  }
+
+  .hero-name {
+    font-size: clamp(2.2rem, 4vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    color: var(--text-primary);
+    margin-bottom: 0.35rem;
+  }
+
+  .hero-role {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-location {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .location-icon {
+    flex-shrink: 0;
+    color: var(--text-muted);
+    opacity: 0.8;
+  }
+
+  .hero-bio {
+    font-size: 1.15rem;
+    line-height: 1.55;
+    color: var(--text-primary);
+    opacity: 0.92;
+    margin-bottom: 1.5rem;
+    max-width: 52ch;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.75rem;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    letter-spacing: 0.01em;
+    user-select: none;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .contact-link:hover {
+    color: var(--text-primary);
+  }
+
+  .contact-icon {
+    flex-shrink: 0;
+    opacity: 0.85;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+
+  .contact-link:hover .contact-icon {
+    opacity: 1;
+    color: var(--accent);
+  }
+
+  .email-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.2rem;
+    border-radius: var(--radius-sm);
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .copy-btn:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-card);
+  }
+
+  .copy-icon {
+    opacity: 0.75;
+  }
+
+  .copy-btn:hover .copy-icon {
+    opacity: 1;
+  }
+
+  .copy-tooltip {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+    font-family: var(--font-sans);
+    border-radius: var(--radius-sm);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    white-space: nowrap;
+    box-shadow: var(--shadow-card);
+  }
+
+  .copy-tooltip.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-2px);
+  }
+
+  .hero-media {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .photo-frame {
+    width: 100%;
+    max-width: 280px;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+    background-color: var(--bg-secondary);
+    box-shadow: var(--shadow-card);
+    padding: 6px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: calc(var(--radius-lg) - 4px);
+    display: block;
+    position: relative;
+    z-index: 1;
+  }
+
+  .photo-placeholder {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    opacity: 0.4;
+    background-color: var(--bg-secondary);
+    border-radius: calc(var(--radius-lg) - 4px);
+  }
+
+  .photo-frame.is-fallback img {
+    display: none;
+  }
+
+  .photo-frame.is-fallback .photo-placeholder {
+    display: flex;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding: 2.5rem 0 2rem;
+    }
+
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .hero-media {
+      justify-content: flex-start;
+      order: -1;
+    }
+
+    .photo-frame {
+      max-width: 180px;
+    }
+
+    .hero-bio {
+      font-size: 1.05rem;
+    }
+
+    .contact-links {
+      gap: 1.25rem;
+    }
+  }
+</style>
